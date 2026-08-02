@@ -45,14 +45,18 @@ export default function Page() {
                 64px none of that detail survives. Its paper was colour-matched
                 to --background when the asset was generated, so it sits on the
                 page without a visible edge. */}
+            {/* Fluid rather than fixed steps: clamp scales it continuously with
+                the viewport, so it never jumps at a breakpoint or looks
+                stranded on an unusual screen width. 340px caps it because the
+                source is only 605px wide — beyond ~2x the mark goes soft. */}
             <Image
               src="/pr-monogram.webp"
               alt=""
               width={605}
               height={490}
               priority
-              sizes="(min-width: 640px) 320px, 240px"
-              className="animate-fade-up fade-d1 mb-6 h-auto w-[240px] sm:w-[320px]"
+              sizes="(max-width: 660px) 52vw, 340px"
+              className="animate-fade-up fade-d1 mb-6 h-auto w-[clamp(200px,52vw,340px)]"
             />
             {/* Both names on one line, baseline-aligned. Now a single h1 —
                 side by side they read as one heading, and two h1s on a page
