@@ -1,7 +1,7 @@
 import Image from "next/image"
 import { Countdown } from "@/components/countdown"
 import { RsvpForm } from "@/components/rsvp-form"
-import { PrMonogram, LotusRowDivider } from "@/components/motifs"
+import { LotusRowDivider } from "@/components/motifs"
 import { EasterEggProvider, HiddenGem } from "@/components/easter-eggs"
 import { Reveal } from "@/components/reveal"
 import { MapPin, Clock, CalendarDays, HandHeart, Flame, Utensils } from "lucide-react"
@@ -40,10 +40,20 @@ export default function Page() {
         {/* Hero */}
         <section className="relative flex min-h-screen flex-col items-center justify-center px-6 py-24 text-center">
           <div className="relative z-10 flex max-w-3xl flex-col items-center">
-            {/* Anchors the tall empty hero and bookends the footer monogram.
-                Takes the previously unused fade-d1 slot, so the entrance
-                sequence now starts here rather than at the names. */}
-            <PrMonogram className="animate-fade-up fade-d1 mb-8 text-primary/70" size={64} />
+            {/* Painted monogram — the arch, banana palms, lotuses, parakeet and
+                nadaswaram. Sized far larger than the SVG mark it replaces; at
+                64px none of that detail survives. Its paper was colour-matched
+                to --background when the asset was generated, so it sits on the
+                page without a visible edge. */}
+            <Image
+              src="/pr-monogram.webp"
+              alt=""
+              width={606}
+              height={522}
+              priority
+              sizes="(min-width: 640px) 320px, 240px"
+              className="animate-fade-up fade-d1 mb-6 h-auto w-[240px] sm:w-[320px]"
+            />
             {/* Both names on one line, baseline-aligned. Now a single h1 —
                 side by side they read as one heading, and two h1s on a page
                 was never right. Type scales down on small screens so
@@ -274,7 +284,16 @@ export default function Page() {
         {/* Footer */}
         <footer className="relative border-t border-border px-6 py-16 text-center">
           <Reveal>
-            <PrMonogram className="mx-auto text-primary" size={56} />
+            {/* Decorative here — the names follow immediately as live text,
+                so an alt would just repeat them to a screen reader. */}
+            <Image
+              src="/pr-monogram.webp"
+              alt=""
+              width={606}
+              height={522}
+              sizes="180px"
+              className="mx-auto h-auto w-[180px]"
+            />
             {/* Same treatment as the hero: gradient names with the ampersand
                 split out in rose italic, sized in em so it scales with the
                 heading. Smaller here, so the gap tightens to match. */}
