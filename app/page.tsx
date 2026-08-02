@@ -118,7 +118,10 @@ export default function Page() {
                 comfortably; at the container's full width lines ran ~95 chars.
                 Body weight left at 400 — Jost 500 across seven paragraphs of
                 long-form copy reads heavy. */}
-            <div className="mx-auto mt-6 max-w-[62ch] space-y-4 text-left leading-relaxed text-foreground">
+            {/* hyphens-auto matters here: justified text without hyphenation
+                opens ragged word gaps and vertical "rivers", worst at a narrow
+                measure. The html lang="en" is what lets the browser hyphenate. */}
+            <div className="mx-auto mt-6 max-w-[62ch] space-y-4 text-justify leading-relaxed text-foreground hyphens-auto">
               <p>
                 They were born in the same city, barely twenty minutes apart. The same streets, the same chai stalls,
                 the same suspiciously small radius. Destiny had them right there all along&mdash;looked at the perfect
