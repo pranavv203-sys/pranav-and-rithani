@@ -63,7 +63,7 @@ export default function Page() {
             <h1 className="animate-fade-up fade-d2 flex items-baseline justify-center gap-x-3 whitespace-nowrap font-serif text-4xl font-bold leading-none sm:gap-x-5 sm:text-6xl md:text-7xl lg:text-8xl">
               <span className="name-gradient">Pranav</span>
               <span className="text-[0.45em] italic text-accent">&amp;</span>
-              <span className="name-gradient">Rithani</span>
+              <span className="name-gradient name-gradient-offset">Rithani</span>
             </h1>
 
             <LotusRowDivider className="animate-fade-up fade-d4 my-8" />
@@ -301,7 +301,7 @@ export default function Page() {
             <h2 className="mt-5 flex items-baseline justify-center gap-x-2.5 whitespace-nowrap font-serif text-4xl sm:gap-x-3 sm:text-5xl">
               <span className="name-gradient">Pranav</span>
               <span className="text-[0.45em] italic text-accent">&amp;</span>
-              <span className="name-gradient">Rithani</span>
+              <span className="name-gradient name-gradient-offset">Rithani</span>
             </h2>
             <p className="mt-3 text-sm uppercase tracking-[0.3em] text-muted-foreground">
               September 17, 2026 · Riverdale, GA
