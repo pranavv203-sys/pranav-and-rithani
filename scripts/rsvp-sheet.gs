@@ -117,3 +117,76 @@ function json(obj) {
     ContentService.MimeType.JSON,
   )
 }
+
+/**
+ * Builds a "Summary" tab of live statistics over the RSVPs sheet.
+ *
+ * Run it once by hand: open the Apps Script editor, choose buildSummary from
+ * the function dropdown, press Run. It needs no deployment — deployments only
+ * affect the web app URL — and it is safe to re-run, which rebuilds the tab.
+ *
+ * Everything written here is a FORMULA, not a value, so the numbers keep
+ * themselves up to date as replies arrive. Deliberately kept out of doPost: a
+ * bug in a statistic should never be able to stop a guest's reply being saved.
+ */
+function buildSummary() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet()
+  const name = 'Summary'
+  let s = ss.getSheetByName(name)
+  if (s) s.clear()
+  else s = ss.insertSheet(name, 0)
+
+  const R = SHEET_NAME // the RSVPs tab
+
+  s.getRange('A1').setValue('RSVP summary').setFontSize(16).setFontWeight('bold')
+  s.getRange('A2')
+    .setValue('Live figures — they update themselves as replies come in.')
+    .setFontColor('#666666')
+
+  const stats = [
+    ['Replies received', `=COUNTA(${R}!B2:B)`],
+    ['Attending', `=COUNTIF(${R}!E2:E,"Yes")`],
+    ['Not attending', `=COUNTIF(${R}!E2:E,"No")`],
+    ['Total guests coming', `=SUM(${R}!F2:F)`],
+    ['Average party size', `=IFERROR(ROUND(AVERAGEIF(${R}!E2:E,"Yes",${R}!F2:F),1),0)`],
+    ['Largest party', `=IFERROR(MAX(${R}!F2:F),0)`],
+    ['', ''],
+    ['Last reply', `=IFERROR(TEXT(MAX(${R}!A2:A),"ddd d mmm, h:mm am/pm"),"—")`],
+    ['Replies in the last 7 days', `=COUNTIFS(${R}!A2:A,">="&(NOW()-7))`],
+    ['Days until the wedding', '=DATE(2026,9,17)-TODAY()'],
+    ['', ''],
+    // Nothing dedupes on the way in, so surface it rather than prevent it.
+    ['Repeated names (check these)', `=COUNTA(${R}!B2:B)-COUNTUNIQUE(${R}!B2:B)`],
+    ['Emails collected', `=COUNTA(${R}!C2:C)`],
+    ['Phone numbers collected', `=COUNTA(${R}!D2:D)`],
+  ]
+
+  stats.forEach(function (row, i) {
+    const r = 4 + i
+    if (!row[0]) return
+    s.getRange(r, 1).setValue(row[0]).setFontWeight('bold')
+    s.getRange(r, 2).setFormula(row[1])
+  })
+
+  // Replies per day, most recent first. INT() drops the time so the datetimes
+  // group by date; "> 0" filters the blank rows, which INT turns into zeros.
+  s.getRange('D3').setValue('Replies by day').setFontWeight('bold')
+  s.getRange('D4').setFormula(
+    `=IFERROR(QUERY(ARRAYFORMULA({INT(${R}!A2:A), ${R}!E2:E, ${R}!F2:F}),` +
+      `"select Col1, count(Col2), sum(Col3) where Col1 > 0 group by Col1 order by Col1 desc ` +
+      `label Col1 'Date', count(Col2) 'Replies', sum(Col3) 'Guests'",0),"No replies yet")`,
+  )
+  s.getRange('D5:D200').setNumberFormat('ddd d mmm')
+
+  s.getRange('A20').setValue('Notes from guests').setFontWeight('bold')
+  s.getRange('A21').setFormula(
+    `=IFERROR(QUERY(${R}!B2:G,"select Col1, Col6 where Col6 <> ''",0),"No notes yet")`,
+  )
+
+  s.setColumnWidth(1, 220)
+  s.setColumnWidth(2, 110)
+  s.setColumnWidth(4, 130)
+  s.setColumnWidth(5, 80)
+  s.setColumnWidth(6, 80)
+  ss.setActiveSheet(s)
+}
