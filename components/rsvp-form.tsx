@@ -2,28 +2,68 @@
 
 import type React from "react"
 import { useState, useTransition } from "react"
-import { submitRsvp } from "@/app/actions/rsvp"
 import { Heart } from "lucide-react"
+
+/**
+ * Replies are not open yet: the site is a static export on GitHub Pages, which
+ * has no server to receive them.
+ *
+ * The submit path is disconnected rather than merely disabled, because the
+ * import of submitRsvp is itself what breaks a static export — Server Actions
+ * need a runtime. TO TURN RSVPs ON, once hosted somewhere with Node:
+ *
+ *   1. set RSVP_OPEN = true
+ *   2. restore:  import { submitRsvp } from "@/app/actions/rsvp"
+ *   3. restore the submitRsvp call in handleSubmit, marked below
+ *   4. drop `output: 'export'` from next.config.mjs and set DATABASE_URL
+ *
+ * The form, the action and the database schema are otherwise untouched.
+ */
+const RSVP_OPEN = false
 
 export function RsvpForm() {
   const [isPending, startTransition] = useTransition()
   const [attending, setAttending] = useState<"yes" | "no">("yes")
-  const [status, setStatus] = useState<"idle" | "success" | "error">("idle")
+  const [status, setStatus] = useState<"idle" | "success" | "error" | "closed">("idle")
   const [error, setError] = useState("")
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    const formData = new FormData(e.currentTarget)
     setError("")
+
+    if (!RSVP_OPEN) {
+      // Deliberately NOT the success screen. A guest who sees "thank you" and
+      // has not actually been recorded is worse off than one who is told
+      // plainly that replies are not open — they would never come back.
+      setStatus("closed")
+      return
+    }
+
+    // const formData = new FormData(e.currentTarget)
     startTransition(async () => {
-      const result = await submitRsvp(formData)
-      if (result.ok) {
-        setStatus("success")
-      } else {
-        setStatus("error")
-        setError(result.error)
-      }
+      // const result = await submitRsvp(formData)
+      // if (result.ok) setStatus("success")
+      // else { setStatus("error"); setError(result.error) }
     })
+  }
+
+  if (status === "closed") {
+    return (
+      <div className="mx-auto max-w-md rounded-xl border border-border bg-card p-10 text-center shadow-sm">
+        <h3 className="font-serif text-2xl text-foreground">Replies aren&apos;t open yet</h3>
+        <p className="mt-3 leading-relaxed text-muted-foreground">
+          We&apos;re still setting this up, so nothing has been sent. Please check back shortly and
+          we&apos;ll be delighted to hear from you.
+        </p>
+        <button
+          type="button"
+          onClick={() => setStatus("idle")}
+          className="mt-6 text-sm font-medium uppercase tracking-[0.15em] text-accent underline underline-offset-4"
+        >
+          Back to the form
+        </button>
+      </div>
+    )
   }
 
   if (status === "success") {

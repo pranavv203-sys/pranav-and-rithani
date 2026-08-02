@@ -1,6 +1,7 @@
 import Image from "next/image"
 import { asset } from "@/lib/base-path"
 import { Countdown } from "@/components/countdown"
+import { RsvpForm } from "@/components/rsvp-form"
 import { LotusRowDivider } from "@/components/motifs"
 import { EasterEggProvider, HiddenGem } from "@/components/easter-eggs"
 import { Reveal } from "@/components/reveal"
@@ -293,22 +294,9 @@ export default function Page() {
               We would be delighted to celebrate with you.
             </p>
             <LotusRowDivider className="my-8" />
-            {/* Placeholder while the site is on GitHub Pages, which is static
-                and cannot run the Server Action the form submits to. The form
-                itself (components/rsvp-form.tsx), the action and the database
-                schema are all still in the repo — swap <RsvpForm /> back in
-                once this moves to a host with a Node runtime.
-
-                Showing a stub rather than a dead form on purpose: a form that
-                accepts input and silently discards it is worse than no form,
-                because guests believe they have replied. */}
-            <div className="mx-auto max-w-md rounded-xl border border-border bg-card p-10 text-center shadow-sm">
-              <p className="font-serif text-2xl text-foreground">RSVP opening soon</p>
-              <p className="mt-3 leading-relaxed text-muted-foreground">
-                We&apos;re putting the finishing touches to this page. Please check back shortly to
-                let us know whether you can join us.
-              </p>
-            </div>
+            {/* The form renders in full, but submitting is disconnected while
+                the site is a static export — see RSVP_OPEN in rsvp-form.tsx. */}
+            <RsvpForm />
           </Reveal>
           {/* hidden gem — retail adventures */}
           <div className="absolute right-5 top-8">
