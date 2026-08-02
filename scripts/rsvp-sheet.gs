@@ -31,6 +31,21 @@
  * code, which is the usual reason an Apps Script "change" appears to do
  * nothing.
  *
+ * PERMISSIONS — pin the scope. Left to itself, Apps Script infers scopes from
+ * the code and grants the WIDE "see, edit, create and delete all your Google
+ * Sheets spreadsheets". Nothing here needs that: everything operates on the
+ * one bound spreadsheet, and LockService and ContentService need no scope at
+ * all. In Project Settings, tick "Show appsscript.json" and add:
+ *
+ *   "oauthScopes": [
+ *     "https://www.googleapis.com/auth/spreadsheets.currentonly"
+ *   ],
+ *
+ * then revoke the old grant at myaccount.google.com/permissions, deploy a new
+ * version and re-authorise. This matters less for what the script does today
+ * than for what it could do tomorrow — with the wide scope, any code added
+ * later silently inherits access to every spreadsheet in the account.
+ *
  * Sharing: the sheet is an ordinary Google Sheet. Share it with your fiancé
  * from the Share button as you would any other.
  */
