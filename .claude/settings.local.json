@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm -v)",
+      "Bash(pnpm -v)",
+      "Bash(ls /usr/local/bin/node /opt/homebrew/bin/node ~/.nvm/versions/node 2>/dev/null; echo \"--- brew:\"; which brew 2>/dev/null || echo none)",
+      "Read(//usr/local/bin/**)",
+      "Read(//usr/bin/**)",
+      "Bash(echo \"exit:$?\")",
+      "Read(//Users/pranav/**)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(break)",
+      "Bash(curl -s -o /private/tmp/claude-501/-Users-pranav-Downloads-wedding/588eec59-227b-4a27-9efc-8968b3abcf50/scratchpad/home.html -w '%{http_code}' --max-time 60 http://localhost:3000/)",
+      "Bash(mkdir -p /private/tmp/claude-501/-Users-pranav-Downloads-wedding/588eec59-227b-4a27-9efc-8968b3abcf50/scratchpad)",
+      "Bash(curl -s -o /private/tmp/claude-501/-Users-pranav-Downloads-wedding/588eec59-227b-4a27-9efc-8968b3abcf50/scratchpad/home.html -w 'HTTP %{http_code}  %{size_download} bytes\\\\n' --max-time 60 http://localhost:3000/)",
+      "Bash(git --version)"
+    ]
+  }
+}

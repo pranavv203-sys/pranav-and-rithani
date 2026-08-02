@@ -1,0 +1,237 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-display), Georgia, "Times New Roman", serif;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  color-scheme: light;
+  /* PALETTE: drawn from the Garden of the Gods sketch — warm beige paper,
+     espresso linework, golden-ochre primary, terracotta/dusty-rose accent */
+  --background: oklch(0.945 0.028 88);
+  --foreground: oklch(0.3 0.035 55);
+  --card: oklch(0.968 0.02 88);
+  --card-foreground: oklch(0.3 0.035 55);
+  --popover: oklch(0.968 0.02 88);
+  --popover-foreground: oklch(0.3 0.035 55);
+  --primary: oklch(0.56 0.1 75);
+  --primary-foreground: oklch(0.99 0.012 90);
+  --secondary: oklch(0.885 0.038 82);
+  --secondary-foreground: oklch(0.4 0.06 60);
+  --muted: oklch(0.895 0.03 82);
+  --muted-foreground: oklch(0.5 0.035 60);
+  --accent: oklch(0.56 0.13 18);
+  --accent-foreground: oklch(0.99 0.012 90);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.87 0.03 82);
+  --input: oklch(0.89 0.026 82);
+  --ring: oklch(0.56 0.1 75);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.968 0.02 88);
+  --sidebar-foreground: oklch(0.3 0.035 55);
+  --sidebar-primary: oklch(0.56 0.1 75);
+  --sidebar-primary-foreground: oklch(0.99 0.012 90);
+  --sidebar-accent: oklch(0.92 0.03 82);
+  --sidebar-accent-foreground: oklch(0.4 0.06 60);
+  --sidebar-border: oklch(0.87 0.03 82);
+  --sidebar-ring: oklch(0.56 0.1 75);
+}
+
+/* This is an always-light wedding invitation — force the light palette even when
+   the visitor's device is set to dark mode. All tokens inherit from :root above. */
+.dark,
+:root.dark {
+  color-scheme: light;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Diagonal espresso <-> gold shading for names & key headings.
+   The gradient sweeps diagonally back and forth across the letters.
+   Espresso -> gold -> espresso only (no rose accent). */
+.name-gradient {
+  background-image: linear-gradient(
+    110deg,
+    oklch(0.34 0.045 55) 0%,
+    oklch(0.42 0.07 62) 14%,
+    var(--primary) 28%,
+    oklch(0.78 0.13 86) 42%,
+    oklch(0.94 0.07 96) 50%,
+    oklch(0.78 0.13 86) 58%,
+    var(--primary) 72%,
+    oklch(0.42 0.07 62) 86%,
+    oklch(0.34 0.045 55) 100%
+  );
+  background-size: 300% 300%;
+  background-position: 15% 30%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 1px 1px oklch(0.3 0.035 55 / 0.28))
+    drop-shadow(0 0 14px oklch(0.72 0.12 85 / 0.28));
+  animation: name-float 16s ease-in-out infinite;
+}
+
+/* Wander the oversized gradient across an irregular, multi-directional path so
+   the shimmer drifts organically rather than sweeping straight left-to-right. */
+@keyframes name-float {
+  0% { background-position: 15% 30%; }
+  14% { background-position: 82% 12%; }
+  29% { background-position: 48% 88%; }
+  43% { background-position: 96% 64%; }
+  58% { background-position: 22% 76%; }
+  72% { background-position: 68% 24%; }
+  86% { background-position: 4% 54%; }
+  100% { background-position: 15% 30%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .name-gradient {
+    animation: none;
+    background-image: linear-gradient(
+      115deg,
+      var(--foreground) 0%,
+      var(--foreground) 35%,
+      var(--primary) 90%
+    );
+  }
+}
+
+@keyframes petal-fall {
+  0% {
+    transform: translateY(-10vh) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% { opacity: 0.9; }
+  90% { opacity: 0.9; }
+  100% {
+    transform: translateY(110vh) translateX(var(--drift, 40px)) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.9s ease-out both;
+}
+
+/* Stagger delays for a sequenced hero entrance (fill-mode "both" keeps
+   each element hidden until its delay elapses). */
+.fade-d1 { animation-delay: 0.08s; }
+.fade-d2 { animation-delay: 0.2s; }
+.fade-d3 { animation-delay: 0.32s; }
+.fade-d4 { animation-delay: 0.44s; }
+.fade-d5 { animation-delay: 0.56s; }
+.fade-d6 { animation-delay: 0.68s; }
+.fade-d7 { animation-delay: 0.8s; }
+
+/* radial bloom — small blossoms expand outward from a center point and fade */
+@keyframes bloom-burst {
+  0% {
+    transform: translate(-50%, -50%) translate(0, 0) scale(0.2) rotate(0deg);
+    opacity: 0;
+  }
+  15% { opacity: 1; }
+  100% {
+    transform: translate(-50%, -50%) translate(var(--bloom-x), var(--bloom-y)) scale(1)
+      rotate(var(--bloom-rot));
+    opacity: 0;
+  }
+}
+
+.animate-bloom {
+  animation: bloom-burst 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Scroll reveal — sections gently fade and rise as they enter the viewport. */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition:
+    opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal[data-revealed="true"] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up,
+  .animate-bloom {
+    animation: none;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
