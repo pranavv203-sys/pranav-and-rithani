@@ -44,13 +44,15 @@ export default function Page() {
                 Takes the previously unused fade-d1 slot, so the entrance
                 sequence now starts here rather than at the names. */}
             <PrMonogram className="animate-fade-up fade-d1 mb-8 text-primary/70" size={64} />
-            <h1 className="animate-fade-up fade-d2 font-serif text-6xl font-bold leading-none sm:text-8xl">
+            {/* Both names on one line, baseline-aligned. Now a single h1 —
+                side by side they read as one heading, and two h1s on a page
+                was never right. Type scales down on small screens so
+                "Pranav & Rithani" stays on one line without wrapping.
+                The ampersand is sized in em so it tracks the names at every
+                breakpoint, and carries the rose accent. */}
+            <h1 className="animate-fade-up fade-d2 flex items-baseline justify-center gap-x-3 whitespace-nowrap font-serif text-4xl font-bold leading-none sm:gap-x-5 sm:text-6xl md:text-7xl lg:text-8xl">
               <span className="name-gradient">Pranav</span>
-            </h1>
-            <span className="name-gradient animate-fade-up fade-d3 my-3 font-serif text-3xl font-bold italic sm:text-4xl">
-              &amp;
-            </span>
-            <h1 className="animate-fade-up fade-d3 font-serif text-6xl font-bold leading-none sm:text-8xl">
+              <span className="text-[0.45em] italic text-accent">&amp;</span>
               <span className="name-gradient">Rithani</span>
             </h1>
 

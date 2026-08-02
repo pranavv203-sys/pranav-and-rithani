@@ -4,9 +4,14 @@ import { Cormorant_Garamond, Jost } from 'next/font/google'
 import { FloatingShapes } from '@/components/floating-shapes'
 import './globals.css'
 
+// Load the real italic: the ampersand, the story subtitle and the pull-quote
+// all use `italic`, and without this the browser synthesises a slanted upright,
+// which a high-contrast serif like Cormorant shows up badly. 600 dropped — no
+// element uses it, so this costs one extra file rather than three.
 const displayFont = Cormorant_Garamond({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
+  weight: ['400', '500', '700'],
+  style: ['normal', 'italic'],
   variable: '--font-display',
 })
 
