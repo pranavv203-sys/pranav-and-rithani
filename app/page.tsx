@@ -40,6 +40,10 @@ export default function Page() {
         {/* Hero */}
         <section className="relative flex min-h-screen flex-col items-center justify-center px-6 py-24 text-center">
           <div className="relative z-10 flex max-w-3xl flex-col items-center">
+            {/* Anchors the tall empty hero and bookends the footer monogram.
+                Takes the previously unused fade-d1 slot, so the entrance
+                sequence now starts here rather than at the names. */}
+            <PrMonogram className="animate-fade-up fade-d1 mb-8 text-primary/70" size={64} />
             <h1 className="animate-fade-up fade-d2 font-serif text-6xl font-bold leading-none sm:text-8xl">
               <span className="name-gradient">Pranav</span>
             </h1>
@@ -108,7 +112,11 @@ export default function Page() {
             <p className="mt-2 font-serif text-lg italic text-foreground/90">
               Two lives that began side by side, then travelled an ocean to finally meet.
             </p>
-            <div className="mt-6 space-y-4 text-left font-medium leading-relaxed text-foreground">
+            {/* 62ch keeps the story near the 60-75 character measure that reads
+                comfortably; at the container's full width lines ran ~95 chars.
+                Body weight left at 400 — Jost 500 across seven paragraphs of
+                long-form copy reads heavy. */}
+            <div className="mx-auto mt-6 max-w-[62ch] space-y-4 text-left leading-relaxed text-foreground">
               <p>
                 They were born in the same city, barely twenty minutes apart. The same streets, the same chai stalls,
                 the same suspiciously small radius. Destiny had them right there all along&mdash;looked at the perfect

@@ -57,18 +57,26 @@
   --card-foreground: oklch(0.3 0.035 55);
   --popover: oklch(0.968 0.02 88);
   --popover-foreground: oklch(0.3 0.035 55);
-  --primary: oklch(0.56 0.1 75);
+  /* Gold darkened 0.56 -> 0.53: against the beige ground the old value
+     measured 4.04:1, below AA for the small gold text (schedule times,
+     map links). 0.53 gives 4.59:1 on background, 4.91:1 on card. */
+  --primary: oklch(0.53 0.1 75);
   --primary-foreground: oklch(0.99 0.012 90);
   --secondary: oklch(0.885 0.038 82);
   --secondary-foreground: oklch(0.4 0.06 60);
   --muted: oklch(0.895 0.03 82);
   --muted-foreground: oklch(0.5 0.035 60);
-  --accent: oklch(0.56 0.13 18);
+  /* Terracotta likewise: 0.56 measured 4.23:1, 0.545 gives 4.52:1 —
+     the pull-quote is text-xl (20px), which WCAG counts as normal text. */
+  --accent: oklch(0.545 0.13 18);
   --accent-foreground: oklch(0.99 0.012 90);
   --destructive: oklch(0.577 0.245 27.325);
+  /* --border stays soft: it draws decorative hairlines and section rules.
+     --input is a UI boundary (WCAG 1.4.11 wants 3:1) and at the old 0.89
+     the RSVP fields measured 1.26:1 — effectively invisible. 0.60 = 3.36:1. */
   --border: oklch(0.87 0.03 82);
-  --input: oklch(0.89 0.026 82);
-  --ring: oklch(0.56 0.1 75);
+  --input: oklch(0.6 0.026 82);
+  --ring: oklch(0.53 0.1 75);
   /* Warm ramp drawn from the same palette (gold -> terracotta -> espresso)
      so anything reaching for a chart token stays in scheme. */
   --chart-1: oklch(0.78 0.11 86);
@@ -79,12 +87,12 @@
   --radius: 0.625rem;
   --sidebar: oklch(0.968 0.02 88);
   --sidebar-foreground: oklch(0.3 0.035 55);
-  --sidebar-primary: oklch(0.56 0.1 75);
+  --sidebar-primary: oklch(0.53 0.1 75);
   --sidebar-primary-foreground: oklch(0.99 0.012 90);
   --sidebar-accent: oklch(0.92 0.03 82);
   --sidebar-accent-foreground: oklch(0.4 0.06 60);
   --sidebar-border: oklch(0.87 0.03 82);
-  --sidebar-ring: oklch(0.56 0.1 75);
+  --sidebar-ring: oklch(0.53 0.1 75);
 }
 
 /* This is an always-light wedding invitation — force the light palette even when

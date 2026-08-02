@@ -74,7 +74,7 @@ export function RsvpForm() {
           {(["yes", "no"] as const).map((value) => (
             <label
               key={value}
-              className={`flex flex-1 cursor-pointer items-center justify-center rounded-md border px-4 py-3 text-center text-sm font-medium transition-colors ${
+              className={`flex flex-1 cursor-pointer items-center justify-center rounded-md border px-4 py-3 text-center text-sm font-medium transition-colors focus-within:ring-2 focus-within:ring-ring/40 ${
                 attending === value
                   ? "border-primary bg-primary text-primary-foreground"
                   : "border-input bg-background text-foreground hover:border-primary"
