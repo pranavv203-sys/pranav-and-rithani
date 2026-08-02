@@ -238,21 +238,21 @@ export default function Page() {
         </section>
 
         {/* Schedule */}
-        <section className="relative overflow-hidden border-y border-border bg-card px-6 py-24 pb-44 lg:pb-24">
+        <section className="relative overflow-hidden border-y border-border bg-card px-6 py-24 pb-32 lg:pb-24">
           {/* Banana tree in the bottom-right corner, at every width.
               How it avoids the text differs by size:
               - lg and up it sits in the gutter beside the max-w-3xl column
                 (~128px at lg, ~256px at xl), so 120px and 240px both clear it.
               - Below lg there is no gutter, so the section takes extra bottom
-                padding (pb-44) instead and the tree occupies that band under
-                the list. 115px wide is ~168px tall, which pb-44 (176px) fits. */}
+                padding (pb-32) instead and the tree occupies that band under
+                the list. 85px wide is ~124px tall, which pb-32 (128px) fits. */}
           <Image
             src="/banana-tree-card.webp"
             alt=""
             width={586}
             height={858}
-            sizes="(min-width: 1280px) 190px, (min-width: 1024px) 100px, 115px"
-            className="pointer-events-none absolute bottom-0 right-0 z-0 h-auto w-[115px] select-none lg:w-[100px] xl:w-[190px]"
+            sizes="(min-width: 1280px) 150px, (min-width: 1024px) 85px, 85px"
+            className="pointer-events-none absolute bottom-0 right-0 z-0 h-auto w-[85px] select-none xl:w-[150px]"
           />
           <div className="relative z-10 mx-auto max-w-3xl">
             <Reveal className="text-center">
