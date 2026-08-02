@@ -183,8 +183,8 @@ export function LotusRowDivider({ className = "" }: { className?: string }) {
         alt=""
         width={1024}
         height={190}
-        sizes="(min-width: 640px) 420px, 300px"
-        className="h-auto w-[300px] sm:w-[420px]"
+        sizes="(min-width: 640px) 300px, 210px"
+        className="h-auto w-[210px] sm:w-[300px]"
       />
     </div>
   )
