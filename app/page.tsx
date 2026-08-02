@@ -238,8 +238,20 @@ export default function Page() {
         </section>
 
         {/* Schedule */}
-        <section className="relative border-y border-border bg-card px-6 py-24">
-          <div className="mx-auto max-w-3xl">
+        <section className="relative overflow-hidden border-y border-border bg-card px-6 py-24">
+          {/* Banana tree in the corner. Widths are chosen against the gutter
+              beside the max-w-3xl column so it never sits under the text:
+              at lg the gutter is ~128px a side, at xl ~256px. Below lg there
+              is no gutter at all, so it is hidden rather than shrunk. */}
+          <Image
+            src="/banana-tree-card.webp"
+            alt=""
+            width={586}
+            height={858}
+            sizes="(min-width: 1280px) 240px, 120px"
+            className="pointer-events-none absolute bottom-0 right-0 z-0 hidden h-auto w-[120px] select-none lg:block xl:w-[240px]"
+          />
+          <div className="relative z-10 mx-auto max-w-3xl">
             <Reveal className="text-center">
               <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Order of events</p>
               <h2 className="mt-3 font-serif text-4xl text-primary sm:text-5xl">Schedule of the Day</h2>

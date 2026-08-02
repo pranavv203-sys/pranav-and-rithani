@@ -71,6 +71,15 @@ const ASSETS = [
     surface: 'card',
     crop: { left: 0, top: 145, width: 1024, height: 190 },
   },
+  {
+    // Banana tree in the corner of the Schedule section, which is bg-card.
+    // Bounds come from ink column/row profiles rather than a single-pixel
+    // bounding box — the paper's edge noise otherwise reads as content.
+    source: 'assets/banana-tree-source.png',
+    out: 'public/banana-tree-card.webp',
+    surface: 'card',
+    crop: { left: 106, top: 86, width: 586, height: 858 },
+  },
 ]
 
 for (const { source, out, crop, surface } of ASSETS) {
