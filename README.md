@@ -1,47 +1,122 @@
 # Pranav & Rithani — Wedding Invitation
 
-Next.js 16 + React 19 + Tailwind v4 + Drizzle/Postgres.
+Next.js 16 + React 19 + Tailwind v4, exported as a static site to GitHub Pages.
+RSVPs go to a Google Sheet.
 
-## Setup
+**Live:** https://pranavv203-sys.github.io/pranav-and-rithani/
+
+## Local development
 
 ```bash
-pnpm install          # or npm install
-cp .env.example .env  # then fill in DATABASE_URL
-pnpm db:push          # creates the `rsvps` table
-pnpm dev
+npm install
+npm run dev
 ```
 
-Open http://localhost:3000
+Open http://localhost:3000. No environment variables are needed to run the
+site; the RSVP form renders but reports that replies are not open unless
+`NEXT_PUBLIC_RSVP_ENDPOINT` is set (see `.env.example`).
 
-## Deploy
+There is no test suite. `npm run build` is the check that matters — it runs
+TypeScript and produces the static export in `out/`.
 
-Push to GitHub, import in Vercel, set `DATABASE_URL` in project settings.
-Use your provider's **pooled** connection string (Neon: the `-pooler` host;
-Supabase: port 6543). Serverless functions open a new connection per cold
-start, and an unpooled string will hit the connection cap under load.
+## Deploying
 
-## Reading RSVPs
+Pushing to `main` triggers `.github/workflows/deploy.yml`, which builds and
+publishes to Pages. Nothing else is required.
 
-There is currently no admin view — responses land in the `rsvps` table only.
-`pnpm db:studio` opens Drizzle Studio locally against your database.
+Two settings the deploy depends on, both under repo **Settings**:
 
-## Changes from the v0 export
+| Where | Setting | Value |
+|---|---|---|
+| Pages → Source | | **GitHub Actions** (not "Deploy from a branch") |
+| Secrets and variables → Actions → **Variables** | `RSVP_ENDPOINT` | the Apps Script web app URL |
 
-- Added `drizzle-kit` + `drizzle.config.ts` (the export had no way to create the table)
-- Pool is cached on `globalThis` so dev hot-reload doesn't leak connections
-- Removed `typescript.ignoreBuildErrors` — real type errors now surface
-- `Reveal` ref typing fixed (was relying on the ignored build errors)
-- RSVP success icon `text-accent-foreground` → `text-accent` (was invisible on `bg-secondary`)
-- RSVP attending buttons stack on mobile instead of squeezing two across
-- Dropped unused imports in `page.tsx`; removed `@types/canvas-confetti`, eslint script, hono override
-- Sketch converted to WebP (926 KB → 99 KB) and `priority` removed — it's a below-fold background
-- Added `sizes` and a mobile object-position so the left-hand spires stay in frame
-- Added a placeholder `icon.svg`
+`RSVP_ENDPOINT` is a variable rather than a secret on purpose: it is embedded
+in the public JavaScript either way, so marking it secret would hide it from
+you and from nobody else. Changing it requires re-running the workflow — a
+variable change does not trigger a build on its own.
+
+### Base paths
+
+Pages serves a project repo from `/<repo>/`. The workflow derives that prefix
+from the repo name and passes it as `NEXT_PUBLIC_BASE_PATH`, so renaming the
+repo cannot silently break every asset URL.
+
+**Any path into `public/` must go through `asset()` in `lib/base-path.ts`.**
+`next/image` does not apply `basePath` when `images.unoptimized` is set — its
+loader returns `src` untouched. An unprefixed path works perfectly in local dev,
+where the prefix is empty, and 404s in production.
+
+## RSVPs
+
+The form posts to a Google Apps Script web app which appends a row to a Sheet.
+The script and its full setup steps are in [`scripts/rsvp-sheet.gs`](scripts/rsvp-sheet.gs).
+
+Chosen over a database because it solves reading as well as writing: the Sheet
+is shareable, openable on a phone, and exportable for a caterer. A Postgres
+table gives none of that without an admin page.
+
+Things worth knowing:
+
+- **Editing the script requires a new deployment.** Deploy → Manage deployments
+  → edit → Version → **New version**. Without that the live URL keeps running
+  the old code — the usual reason an Apps Script change appears to do nothing.
+- **The OAuth scope is pinned** to `spreadsheets.currentonly` in the script's
+  `appsscript.json`. Left to infer, Apps Script grants access to *every*
+  spreadsheet in the account.
+- **The request sends `Content-Type: text/plain`** so it stays a "simple"
+  cross-origin request. Apps Script does not answer `OPTIONS`, so
+  `application/json` would fail CORS before reaching Google.
+- **An unreadable response is treated as success.** Apps Script answers a POST
+  with a 302 to a URL that is not reliably readable by the client; the row is
+  written regardless. Failing there would tell guests their reply was lost when
+  it was saved, and they would send it again.
+- **The endpoint is publicly writable.** A honeypot field stops naive bots, not
+  a determined person. Delete the deployment after the wedding.
+
+## Artwork
+
+The painted assets in `public/` are generated from the sources in `assets/`:
+
+```bash
+node scripts/build-artwork.mjs
+```
+
+The sources are scans on cream paper, which needs two corrections. The paper is
+darker and greyer than the page, and it is unevenly lit — so a flat colour match
+leaves a visible rectangle whichever part you match. The script flat-field
+corrects each image (divides it by a heavily blurred copy of itself, evening the
+paper to white) and then multiplies the page colour back in.
+
+**Changing `--background` or `--card` in `globals.css` means re-running this
+script.** The surface colour is baked into each asset, which is why a divider
+built for `--background` shows as a patch on a `bg-card` section — hence the
+`tone` prop on `LotusRowDivider`.
+
+Exports are capped at ~2× their display size, because `images.unoptimized` is
+required for a static export: whatever is exported is what every device
+downloads. If this ever moves to a host with the Next optimizer, drop the
+`maxWidth` values and let it generate per-width variants.
+
+## The dormant Postgres path
+
+`app/actions/rsvp.ts`, `lib/db/` and the `db:push` / `db:studio` scripts are the
+original database implementation. They are unused — Server Actions need a Node
+runtime, which a static export does not have — but left in place deliberately.
+
+To switch back to it: drop `output: 'export'` from `next.config.mjs`, restore
+the `submitRsvp` import and call in `components/rsvp-form.tsx`, set
+`DATABASE_URL`, and deploy somewhere with Node. Use a **pooled** connection
+string (Neon: the `-pooler` host; Supabase: port 6543) — serverless functions
+open a connection per cold start and an unpooled string hits the cap.
 
 ## Known, deliberately left alone
 
 - The floating confetti canvas sits at `z-index: 5`; only the hero is above it,
   so particles pass over the story, countdown, schedule and RSVP content.
-- `falling-petals.tsx`, `KolamDivider`, `SprigDivider`, `MinimalDivider`,
-  `MountainDivider`, `GoldFlourish`, `VelPeacock` and `ui/button.tsx` are unused.
-- No rate limiting or duplicate protection on the RSVP endpoint.
+- `falling-petals.tsx`, `PrMonogram`, `KolamDivider`, `SprigDivider`,
+  `MinimalDivider`, `MountainDivider`, `GoldFlourish`, `VelPeacock` and
+  `ui/button.tsx` are unused.
+- No rate limiting or duplicate protection on the RSVP endpoint. A double-tap
+  is prevented by disabling the button while submitting, nothing more.
+- No Open Graph image, so the link renders as bare text when shared.
