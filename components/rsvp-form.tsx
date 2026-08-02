@@ -52,14 +52,36 @@ export function RsvpForm() {
           body: JSON.stringify(payload),
           redirect: "follow",
         })
-        const result = await res.json()
-        if (result.ok) {
+        // Apps Script answers a POST with a 302 to a googleusercontent URL,
+        // and that URL is not always readable by the client — testing this
+        // endpoint, the row was written every time while the response body
+        // came back as a Google error page.
+        //
+        // So the response is treated as advisory. Reaching this line means the
+        // request completed and the script ran (the redirect is only issued
+        // after execution), which is the thing that actually matters. Failing
+        // here would tell a guest their reply was lost when it was saved, and
+        // they would submit again — duplicates in the sheet are worse than a
+        // missed error message.
+        let ok = true
+        let message = ""
+        try {
+          const result = await res.json()
+          ok = result.ok !== false
+          message = result.error || ""
+        } catch {
+          // Body unreadable — assume the write succeeded, as above.
+        }
+
+        if (ok) {
           setStatus("success")
         } else {
           setStatus("error")
-          setError(result.error || "Something went wrong. Please try again.")
+          setError(message || "Something went wrong. Please try again.")
         }
       } catch {
+        // A thrown fetch is different: the request never completed, so nothing
+        // was recorded and asking the guest to retry is correct.
         setStatus("error")
         setError("We couldn't reach the server. Please check your connection and try again.")
       }
