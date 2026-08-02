@@ -275,7 +275,14 @@ export default function Page() {
         <footer className="relative border-t border-border px-6 py-16 text-center">
           <Reveal>
             <PrMonogram className="mx-auto text-primary" size={56} />
-            <h2 className="name-gradient mt-5 font-serif text-4xl sm:text-5xl">Pranav &amp; Rithani</h2>
+            {/* Same treatment as the hero: gradient names with the ampersand
+                split out in rose italic, sized in em so it scales with the
+                heading. Smaller here, so the gap tightens to match. */}
+            <h2 className="mt-5 flex items-baseline justify-center gap-x-2.5 whitespace-nowrap font-serif text-4xl sm:gap-x-3 sm:text-5xl">
+              <span className="name-gradient">Pranav</span>
+              <span className="text-[0.45em] italic text-accent">&amp;</span>
+              <span className="name-gradient">Rithani</span>
+            </h2>
             <p className="mt-3 text-sm uppercase tracking-[0.3em] text-muted-foreground">
               September 17, 2026 · Riverdale, GA
             </p>
