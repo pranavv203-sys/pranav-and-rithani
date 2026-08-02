@@ -48,8 +48,8 @@ export default function Page() {
             <Image
               src="/pr-monogram.webp"
               alt=""
-              width={606}
-              height={522}
+              width={605}
+              height={490}
               priority
               sizes="(min-width: 640px) 320px, 240px"
               className="animate-fade-up fade-d1 mb-6 h-auto w-[240px] sm:w-[320px]"
@@ -289,8 +289,8 @@ export default function Page() {
             <Image
               src="/pr-monogram.webp"
               alt=""
-              width={606}
-              height={522}
+              width={605}
+              height={490}
               sizes="180px"
               className="mx-auto h-auto w-[180px]"
             />

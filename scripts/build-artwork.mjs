@@ -40,7 +40,13 @@ const ASSETS = [
     out: 'public/pr-monogram.webp',
     // Excludes the painted names — the site sets those as live text, so baking
     // them in would show the names twice in two different typefaces.
-    crop: { left: 112, top: 145, width: 606, height: 522 },
+    //
+    // Bounds are set so the painted content is centred within the frame. The
+    // artwork is not centred in the source: measured against the page colour,
+    // the ink runs x 173-690, which left 61px of blank paper on one side and
+    // 27px on the other. Centring the <img> then still looked off, because the
+    // asymmetry was inside the image. Margins are now ~44px on both sides.
+    crop: { left: 129, top: 175, width: 605, height: 490 },
   },
   {
     source: 'assets/lotus-vine-source.png',
