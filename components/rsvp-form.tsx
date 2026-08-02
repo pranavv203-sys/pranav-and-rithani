@@ -5,21 +5,19 @@ import { useState, useTransition } from "react"
 import { Heart } from "lucide-react"
 
 /**
- * Replies are not open yet: the site is a static export on GitHub Pages, which
- * has no server to receive them.
+ * Replies go to a Google Apps Script web app, which appends them to a Sheet.
+ * See scripts/rsvp-sheet.gs for the script and its setup steps.
  *
- * The submit path is disconnected rather than merely disabled, because the
- * import of submitRsvp is itself what breaks a static export — Server Actions
- * need a runtime. TO TURN RSVPs ON, once hosted somewhere with Node:
+ * The endpoint is injected at build time from the RSVP_ENDPOINT repository
+ * variable. While it is unset the form still renders but reports that replies
+ * are not open, so the site is never showing a form that silently discards
+ * what people type.
  *
- *   1. set RSVP_OPEN = true
- *   2. restore:  import { submitRsvp } from "@/app/actions/rsvp"
- *   3. restore the submitRsvp call in handleSubmit, marked below
- *   4. drop `output: 'export'` from next.config.mjs and set DATABASE_URL
- *
- * The form, the action and the database schema are otherwise untouched.
+ * (The original Postgres path — app/actions/rsvp.ts and lib/db — is still in
+ * the repo. It cannot be used from a static export, since Server Actions need
+ * a Node runtime.)
  */
-const RSVP_OPEN = false
+const ENDPOINT = process.env.NEXT_PUBLIC_RSVP_ENDPOINT ?? ""
 
 export function RsvpForm() {
   const [isPending, startTransition] = useTransition()
@@ -31,7 +29,7 @@ export function RsvpForm() {
     e.preventDefault()
     setError("")
 
-    if (!RSVP_OPEN) {
+    if (!ENDPOINT) {
       // Deliberately NOT the success screen. A guest who sees "thank you" and
       // has not actually been recorded is worse off than one who is told
       // plainly that replies are not open — they would never come back.
@@ -39,11 +37,32 @@ export function RsvpForm() {
       return
     }
 
-    // const formData = new FormData(e.currentTarget)
+    const form = new FormData(e.currentTarget)
+    const payload = Object.fromEntries(form.entries())
+
     startTransition(async () => {
-      // const result = await submitRsvp(formData)
-      // if (result.ok) setStatus("success")
-      // else { setStatus("error"); setError(result.error) }
+      try {
+        const res = await fetch(ENDPOINT, {
+          method: "POST",
+          // text/plain keeps this a "simple" cross-origin request, so the
+          // browser skips the preflight. Apps Script does not answer OPTIONS,
+          // so sending application/json here would fail CORS before the
+          // request ever reached Google.
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(payload),
+          redirect: "follow",
+        })
+        const result = await res.json()
+        if (result.ok) {
+          setStatus("success")
+        } else {
+          setStatus("error")
+          setError(result.error || "Something went wrong. Please try again.")
+        }
+      } catch {
+        setStatus("error")
+        setError("We couldn't reach the server. Please check your connection and try again.")
+      }
     })
   }
 
@@ -87,6 +106,17 @@ export function RsvpForm() {
 
   return (
     <form onSubmit={handleSubmit} className="mx-auto max-w-xl space-y-5 text-left">
+      {/* Honeypot. Hidden from people, and skipped by keyboard and screen
+          readers, but naive bots fill every field they find. The script treats
+          any submission carrying this as spam. */}
+      <input
+        type="text"
+        name="website"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="hidden"
+      />
       <div>
         <label htmlFor="name" className="mb-1.5 block text-sm font-medium text-foreground">
           Full name
