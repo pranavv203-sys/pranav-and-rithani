@@ -43,9 +43,11 @@ const ASSETS = [
     crop: { left: 112, top: 145, width: 606, height: 522 },
   },
   {
-    source: 'assets/lotus-row-source.png',
-    out: 'public/lotus-row.webp',
-    crop: { left: 0, top: 305, width: 797, height: 540 },
+    source: 'assets/lotus-vine-source.png',
+    out: 'public/lotus-vine.webp',
+    // The vine runs edge to edge, so the crop keeps the full width and trims
+    // only the empty paper above and below the band.
+    crop: { left: 0, top: 145, width: 1024, height: 190 },
   },
 ]
 

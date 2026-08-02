@@ -179,12 +179,12 @@ export function LotusRowDivider({ className = "" }: { className?: string }) {
   return (
     <div className={`flex justify-center ${className}`} aria-hidden="true">
       <Image
-        src="/lotus-row.webp"
+        src="/lotus-vine.webp"
         alt=""
-        width={797}
-        height={540}
-        sizes="(min-width: 640px) 360px, 260px"
-        className="h-auto w-[260px] sm:w-[360px]"
+        width={1024}
+        height={190}
+        sizes="(min-width: 640px) 420px, 300px"
+        className="h-auto w-[300px] sm:w-[420px]"
       />
     </div>
   )
