@@ -76,8 +76,8 @@ export function RsvpForm() {
               key={value}
               className={`flex flex-1 cursor-pointer items-center justify-center rounded-md border px-4 py-3 text-center text-sm font-medium transition-colors focus-within:ring-2 focus-within:ring-ring/40 ${
                 attending === value
-                  ? "border-primary bg-primary text-primary-foreground"
-                  : "border-input bg-background text-foreground hover:border-primary"
+                  ? "border-accent bg-accent text-accent-foreground"
+                  : "border-input bg-background text-foreground hover:border-accent"
               }`}
             >
               <input
@@ -129,7 +129,7 @@ export function RsvpForm() {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full rounded-md bg-primary px-6 py-3.5 text-sm font-medium uppercase tracking-[0.15em] text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
+        className="w-full rounded-md bg-accent px-6 py-3.5 text-sm font-medium uppercase tracking-[0.15em] text-accent-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
       >
         {isPending ? "Sending..." : "Send RSVP"}
       </button>

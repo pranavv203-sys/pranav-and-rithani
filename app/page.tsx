@@ -83,7 +83,7 @@ export default function Page() {
 
             <a
               href="#rsvp"
-              className="animate-fade-up fade-d7 mt-10 rounded-full bg-primary px-8 py-3.5 text-sm font-medium uppercase tracking-[0.15em] text-primary-foreground transition-opacity hover:opacity-90"
+              className="animate-fade-up fade-d7 mt-10 rounded-full bg-accent px-8 py-3.5 text-sm font-medium uppercase tracking-[0.15em] text-accent-foreground transition-opacity hover:opacity-90"
             >
               RSVP
             </a>
@@ -212,7 +212,7 @@ export default function Page() {
                     href="https://maps.google.com/?q=Hindu+Temple+of+Atlanta+Riverdale+GA"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-full border border-primary px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
+                    className="inline-flex items-center gap-2 rounded-full border border-accent px-4 py-2 text-sm font-medium text-accent transition-colors hover:bg-accent hover:text-accent-foreground"
                   >
                     <MapPin className="h-4 w-4" aria-hidden="true" /> Google Maps
                   </a>
@@ -220,7 +220,7 @@ export default function Page() {
                     href="https://maps.apple.com/?q=Hindu+Temple+of+Atlanta+Riverdale+GA"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-full border border-primary px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
+                    className="inline-flex items-center gap-2 rounded-full border border-accent px-4 py-2 text-sm font-medium text-accent transition-colors hover:bg-accent hover:text-accent-foreground"
                   >
                     <MapPin className="h-4 w-4" aria-hidden="true" /> Apple Maps
                   </a>
