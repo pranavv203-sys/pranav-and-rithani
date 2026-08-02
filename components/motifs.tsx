@@ -1,3 +1,5 @@
+import Image from "next/image"
+
 export function PrMonogram({ className = "", size = 72 }: { className?: string; size?: number }) {
   // small lotus accent used at the top and bottom of the ring
   const lotus = (cx: number, cy: number, flip: boolean) => (
@@ -168,28 +170,22 @@ export function MinimalDivider({ className = "" }: { className?: string }) {
   )
 }
 
-/* Option D — A row of three small lotus blooms */
+/* Option D — the painted lotus row, used as the section divider.
+   The flanking hairlines the SVG version had are gone: they framed a small
+   geometric mark, but against the organic painted edges they read as a box
+   drawn around a picture. Its paper is colour-matched to --background by
+   scripts/build-artwork.mjs, so it sits on the page without a visible edge. */
 export function LotusRowDivider({ className = "" }: { className?: string }) {
-  const lotus = (scale: number, opacity: number) => (
-    <g transform={`scale(${scale})`} fill="none" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" opacity={opacity}>
-      <path d="M0 6c0-5 0-8 0-8s0 3 0 8z" />
-      <path d="M0 6c-2-4-5-6-5-6s0 4 5 6z" />
-      <path d="M0 6c2-4 5-6 5-6s0 4-5 6z" />
-      <path d="M0 6c-4-2-8-2-8-2s3 3 8 2z" opacity="0.7" />
-      <path d="M0 6c4-2 8-2 8-2s-3 3-8 2z" opacity="0.7" />
-    </g>
-  )
   return (
-    <div className={`flex items-center justify-center gap-5 ${className}`} aria-hidden="true">
-      <span className="h-px w-12 bg-border sm:w-16" />
-      <svg width="180" height="40" viewBox="0 0 180 40" className="text-primary">
-        <g transform="translate(45 27)">{lotus(1.4, 0.6)}</g>
-        {/* centre lotus carries the terracotta accent — the one recurring
-            place the third palette colour shows up across the page */}
-        <g transform="translate(90 25)" className="text-accent">{lotus(1.9, 0.95)}</g>
-        <g transform="translate(135 27)">{lotus(1.4, 0.6)}</g>
-      </svg>
-      <span className="h-px w-12 bg-border sm:w-16" />
+    <div className={`flex justify-center ${className}`} aria-hidden="true">
+      <Image
+        src="/lotus-row.webp"
+        alt=""
+        width={797}
+        height={540}
+        sizes="(min-width: 640px) 360px, 260px"
+        className="h-auto w-[260px] sm:w-[360px]"
+      />
     </div>
   )
 }
