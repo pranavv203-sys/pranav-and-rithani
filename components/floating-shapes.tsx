@@ -48,6 +48,9 @@ interface Particle {
   opacity: number
   metal: Metal
   kind: Kind
+  // Cached sheen gradient, rebuilt only when the shimmer bucket changes.
+  grad: CanvasGradient | null
+  gradKey: number
 }
 
 function rand(min: number, max: number) {
@@ -67,14 +70,43 @@ export function FloatingShapes() {
     const ctx = canvas.getContext("2d")
     if (!ctx) return
 
+    // Touch devices get a lighter treatment throughout: fewer pixels, fewer
+    // particles, no pointer lean. Keyed off pointer type rather than width so
+    // a small desktop window keeps the full effect.
+    const finePointer = window.matchMedia("(pointer: fine)").matches
+
     let width = 0
     let height = 0
-    let dpr = Math.min(window.devicePixelRatio || 1, 2)
+    let dpr = 1
+
+    // Extra canvas height beyond the viewport. Mobile browsers grow and shrink
+    // innerHeight as the URL bar hides and shows while scrolling; drawing into
+    // that slack means those changes never require a resize, and the canvas
+    // still covers the screen at its tallest.
+    const SLACK = 160
+
+    let lastW = -1
+    let lastVH = -1
 
     const resize = () => {
-      dpr = Math.min(window.devicePixelRatio || 1, 2)
-      width = window.innerWidth
-      height = window.innerHeight
+      const w = window.innerWidth
+      const vh = window.innerHeight
+
+      // Reassigning canvas.width/height RESETS the context — it clears the
+      // frame and drops the transform. Mobile fires resize on every URL-bar
+      // movement, so honouring those events reset the canvas mid-animation
+      // and made the whole field flicker and jump while scrolling. That was
+      // the jitter. Only react to a width change or a height change too large
+      // to be the URL bar.
+      if (w === lastW && Math.abs(vh - lastVH) <= SLACK) return
+      lastW = w
+      lastVH = vh
+
+      // Phones are commonly DPR 3. Capping lower cuts the pixels painted per
+      // frame by more than half, which the particles do not visibly suffer for.
+      dpr = Math.min(window.devicePixelRatio || 1, finePointer ? 2 : 1.5)
+      width = w
+      height = vh + SLACK
       canvas.width = Math.floor(width * dpr)
       canvas.height = Math.floor(height * dpr)
       canvas.style.width = width + "px"
@@ -119,10 +151,16 @@ export function FloatingShapes() {
         opacity: rand(0.45, 0.9),
         metal: pick(METALS),
         kind,
+        grad: null,
+        gradKey: -1,
       }
     }
 
-    const count = Math.round(Math.min(46, Math.max(24, (width * height) / 26000)))
+    const maxCount = finePointer ? 46 : 26
+    const minCount = finePointer ? 24 : 14
+    const count = Math.round(
+      Math.min(maxCount, Math.max(minCount, (width * height) / 26000)),
+    )
     const particles: Particle[] = Array.from({ length: count }, () => spawn(true))
 
     const pointer = { x: width / 2, y: height / 2, tx: width / 2, ty: height / 2, active: false }
@@ -131,14 +169,22 @@ export function FloatingShapes() {
       pointer.ty = e.clientY
       pointer.active = true
     }
-    window.addEventListener("pointermove", onPointer, { passive: true })
+    // Touch only: pointermove fires in bursts as a finger drags to scroll, so
+    // the lean target jumped straight to wherever the finger landed and the
+    // entire field lurched sideways by up to 70px on every swipe. A mouse
+    // moves continuously, so the same code reads as smooth parallax there.
+    if (finePointer) window.addEventListener("pointermove", onPointer, { passive: true })
 
     let lastScroll = window.scrollY
     let scrollFlow = 0
+    // Momentum scrolling on touch delivers much larger jumps in scrollY between
+    // frames than a wheel does, so the same coefficients made the field lurch.
+    const flowGain = finePointer ? 0.06 : 0.03
+    const flowCap = finePointer ? 14 : 7
     const onScroll = () => {
       const y = window.scrollY
-      scrollFlow += (y - lastScroll) * 0.06
-      scrollFlow = Math.max(-14, Math.min(14, scrollFlow))
+      scrollFlow += (y - lastScroll) * flowGain
+      scrollFlow = Math.max(-flowCap, Math.min(flowCap, scrollFlow))
       lastScroll = y
     }
     window.addEventListener("scroll", onScroll, { passive: true })
@@ -159,13 +205,26 @@ export function FloatingShapes() {
       const w = p.kind === "rect" ? p.size * p.ratio : p.kind === "leaf" ? p.size * 0.62 : p.size
       const h = p.size
 
+      // Gradients were rebuilt for every particle on every frame — with 46
+      // particles at 60fps that is ~2,800 gradient allocations a second, by
+      // far the most expensive thing in the loop and the source of the low
+      // frame rate on phones. The geometry is fixed per particle and only the
+      // dark stop moves, so quantise the shimmer into 12 steps and rebuild
+      // only when a particle crosses into the next one. Gradient coordinates
+      // are resolved against the transform at paint time, so a cached one
+      // stays correct as the particle moves.
       const shimmer = 0.5 + 0.25 * Math.sin(p.rotY)
-      const grad = ctx.createLinearGradient(-w / 2, -h / 2, w / 2, h / 2)
-      grad.addColorStop(0, p.metal.light)
-      grad.addColorStop(Math.max(0.05, Math.min(0.95, shimmer)), p.metal.dark)
-      grad.addColorStop(1, p.metal.light)
-      ctx.fillStyle = grad
-      ctx.strokeStyle = grad
+      const bucket = Math.round(Math.max(0.05, Math.min(0.95, shimmer)) * 12)
+      if (!p.grad || p.gradKey !== bucket) {
+        const grad = ctx.createLinearGradient(-w / 2, -h / 2, w / 2, h / 2)
+        grad.addColorStop(0, p.metal.light)
+        grad.addColorStop(Math.max(0.05, Math.min(0.95, bucket / 12)), p.metal.dark)
+        grad.addColorStop(1, p.metal.light)
+        p.grad = grad
+        p.gradKey = bucket
+      }
+      ctx.fillStyle = p.grad
+      ctx.strokeStyle = p.grad
 
       switch (p.kind) {
         case "leaf":
