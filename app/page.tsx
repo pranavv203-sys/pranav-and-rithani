@@ -1,6 +1,6 @@
 import Image from "next/image"
+import { asset } from "@/lib/base-path"
 import { Countdown } from "@/components/countdown"
-import { RsvpForm } from "@/components/rsvp-form"
 import { LotusRowDivider } from "@/components/motifs"
 import { EasterEggProvider, HiddenGem } from "@/components/easter-eggs"
 import { Reveal } from "@/components/reveal"
@@ -50,7 +50,7 @@ export default function Page() {
                 stranded on an unusual screen width. 340px caps it because the
                 source is only 605px wide — beyond ~2x the mark goes soft. */}
             <Image
-              src="/pr-monogram.webp"
+              src={asset("/pr-monogram.webp")}
               alt=""
               width={605}
               height={490}
@@ -103,7 +103,7 @@ export default function Page() {
           {/* the place it all clicked — Garden of the Gods, Colorado (hand-drawn sketch) */}
           <div className="pointer-events-none absolute inset-0" aria-hidden="true">
             <Image
-              src="/garden-of-gods-sketch.webp"
+              src={asset("/garden-of-gods-sketch.webp")}
               alt=""
               fill
               sizes="100vw"
@@ -251,7 +251,7 @@ export default function Page() {
                 padding (pb-32) instead and the tree occupies that band under
                 the list. 85px wide is ~124px tall, which pb-32 (128px) fits. */}
           <Image
-            src="/banana-tree-card.webp"
+            src={asset("/banana-tree-card.webp")}
             alt=""
             width={586}
             height={858}
@@ -293,7 +293,22 @@ export default function Page() {
               We would be delighted to celebrate with you.
             </p>
             <LotusRowDivider className="my-8" />
-            <RsvpForm />
+            {/* Placeholder while the site is on GitHub Pages, which is static
+                and cannot run the Server Action the form submits to. The form
+                itself (components/rsvp-form.tsx), the action and the database
+                schema are all still in the repo — swap <RsvpForm /> back in
+                once this moves to a host with a Node runtime.
+
+                Showing a stub rather than a dead form on purpose: a form that
+                accepts input and silently discards it is worse than no form,
+                because guests believe they have replied. */}
+            <div className="mx-auto max-w-md rounded-xl border border-border bg-card p-10 text-center shadow-sm">
+              <p className="font-serif text-2xl text-foreground">RSVP opening soon</p>
+              <p className="mt-3 leading-relaxed text-muted-foreground">
+                We&apos;re putting the finishing touches to this page. Please check back shortly to
+                let us know whether you can join us.
+              </p>
+            </div>
           </Reveal>
           {/* hidden gem — retail adventures */}
           <div className="absolute right-5 top-8">
@@ -307,7 +322,7 @@ export default function Page() {
             {/* Decorative here — the names follow immediately as live text,
                 so an alt would just repeat them to a screen reader. */}
             <Image
-              src="/pr-monogram.webp"
+              src={asset("/pr-monogram.webp")}
               alt=""
               width={605}
               height={490}

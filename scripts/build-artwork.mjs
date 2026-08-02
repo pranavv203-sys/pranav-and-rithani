@@ -39,11 +39,22 @@ const SURFACE = {
 /** Blur radius approximating the paper's lighting field. See note above. */
 const SIGMA = 90
 
+/**
+ * maxWidth caps each export at roughly 2x its largest on-page display width.
+ * This matters because the static export runs with images.unoptimized — there
+ * is no optimizer to resize on the fly, so whatever is exported here is what
+ * every device downloads. 2x keeps retina screens sharp without shipping the
+ * full source to a phone. If the site later moves to a host with the Next
+ * optimizer, drop these and let it generate per-width variants instead.
+ */
 const ASSETS = [
   {
     source: 'assets/pr-logo-source.png',
     out: 'public/pr-monogram.webp',
     surface: 'background',
+    // Displayed at up to 340px. Source crops to 605px, which is below 2x
+    // (680px) — so this is left at native size, the most detail available.
+    maxWidth: null,
     // Excludes the painted names — the site sets those as live text, so baking
     // them in would show the names twice in two different typefaces.
     //
@@ -62,6 +73,7 @@ const ASSETS = [
     // The vine runs edge to edge, so the crop keeps the full width and trims
     // only the empty paper above and below the band.
     crop: { left: 0, top: 145, width: 1024, height: 190 },
+    maxWidth: 480, // displayed at up to 240px
   },
   {
     // Same vine, baked for --card. The Schedule section is the one place a
@@ -70,6 +82,7 @@ const ASSETS = [
     out: 'public/lotus-vine-card.webp',
     surface: 'card',
     crop: { left: 0, top: 145, width: 1024, height: 190 },
+    maxWidth: 480, // displayed at up to 240px
   },
   {
     // Banana tree in the corner of the Schedule section, which is bg-card.
@@ -79,10 +92,11 @@ const ASSETS = [
     out: 'public/banana-tree-card.webp',
     surface: 'card',
     crop: { left: 106, top: 86, width: 586, height: 858 },
+    maxWidth: 300, // displayed at up to 150px
   },
 ]
 
-for (const { source, out, crop, surface } of ASSETS) {
+for (const { source, out, crop, surface, maxWidth } of ASSETS) {
   const BG = SURFACE[surface]
   const base = sharp(source).extract(crop).removeAlpha()
   const { data, info } = await base.clone().raw().toBuffer({ resolveWithObject: true })
@@ -98,9 +112,11 @@ for (const { source, out, crop, surface } of ASSETS) {
     }
   }
 
-  const result = await sharp(pixels, { raw: { width, height, channels: 3 } })
-    .webp({ quality: 90 })
-    .toFile(out)
+  let pipeline = sharp(pixels, { raw: { width, height, channels: 3 } })
+  if (maxWidth && maxWidth < width) {
+    pipeline = pipeline.resize({ width: maxWidth, fit: 'inside', kernel: 'lanczos3' })
+  }
+  const result = await pipeline.webp({ quality: 90 }).toFile(out)
 
   console.log(`${out}  ${result.width}x${result.height}  ${Math.round(result.size / 1024)} KB`)
 }

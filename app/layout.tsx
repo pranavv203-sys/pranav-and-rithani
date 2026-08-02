@@ -26,7 +26,9 @@ export const metadata: Metadata = {
   description:
     'Join us to celebrate the wedding of Pranav Vishnu & Rithani on September 17, 2026 at the Hindu Temple of Atlanta, Riverdale, GA.',
   icons: {
-    icon: '/icon.svg',
+    // Metadata URLs are not basePath-prefixed automatically, so on a project
+    // repo (served under /<repo>/) an unprefixed path 404s.
+    icon: `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/icon.svg`,
   },
 }
 

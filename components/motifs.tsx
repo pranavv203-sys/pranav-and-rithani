@@ -1,4 +1,5 @@
 import Image from "next/image"
+import { asset } from "@/lib/base-path"
 
 export function PrMonogram({ className = "", size = 72 }: { className?: string; size?: number }) {
   // small lotus accent used at the top and bottom of the ring
@@ -189,7 +190,7 @@ export function LotusRowDivider({
   return (
     <div className={`flex justify-center ${className}`} aria-hidden="true">
       <Image
-        src={tone === "card" ? "/lotus-vine-card.webp" : "/lotus-vine.webp"}
+        src={asset(tone === "card" ? "/lotus-vine-card.webp" : "/lotus-vine.webp")}
         alt=""
         width={1024}
         height={190}
