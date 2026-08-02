@@ -186,8 +186,19 @@ export default function Page() {
         </section>
 
         {/* Details */}
-        <section className="relative bg-background px-6 py-24">
-          <div className="mx-auto max-w-5xl text-center">
+        <section className="relative overflow-hidden bg-background px-6 py-24">
+          {/* Lotus leaves dropping in from the top-left. Anchored to top-0 with
+              no gap, so the stems continue off the section edge and the cluster
+              reads as hanging from above rather than pasted on. */}
+          <Image
+            src={asset("/lotus-leaf.webp")}
+            alt=""
+            width={190}
+            height={425}
+            sizes="(min-width: 640px) 95px, 62px"
+            className="pointer-events-none absolute left-0 top-0 z-0 h-auto w-[62px] select-none sm:left-2 sm:w-[95px]"
+          />
+          <div className="relative z-10 mx-auto max-w-5xl text-center">
             <Reveal>
               <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">The celebration</p>
               <h2 className="mt-3 font-serif text-4xl text-primary sm:text-5xl">When &amp; Where</h2>

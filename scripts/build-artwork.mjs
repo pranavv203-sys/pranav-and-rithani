@@ -85,6 +85,21 @@ const ASSETS = [
     maxWidth: 480, // displayed at up to 240px
   },
   {
+    // Lotus leaves hanging into the top-left of the When & Where section,
+    // which is bg-background.
+    //
+    // top is deliberately 0: the stems run off the top edge of the source, and
+    // keeping that intact is what makes the cluster read as dropping in from
+    // above rather than floating. Bounds found by isolating green pixels
+    // (g > b, darker than paper) — the usual paper-vs-ink threshold failed
+    // here because this source has a much stronger paper texture.
+    source: 'assets/lotus-leaf-source.png',
+    out: 'public/lotus-leaf.webp',
+    surface: 'background',
+    crop: { left: 228, top: 0, width: 472, height: 1056 },
+    maxWidth: 190, // displayed at up to 95px
+  },
+  {
     // Banana tree in the corner of the Schedule section, which is bg-card.
     // Bounds come from ink column/row profiles rather than a single-pixel
     // bounding box — the paper's edge noise otherwise reads as content.
