@@ -175,11 +175,21 @@ export function MinimalDivider({ className = "" }: { className?: string }) {
    geometric mark, but against the organic painted edges they read as a box
    drawn around a picture. Its paper is colour-matched to --background by
    scripts/build-artwork.mjs, so it sits on the page without a visible edge. */
-export function LotusRowDivider({ className = "" }: { className?: string }) {
+export function LotusRowDivider({
+  className = "",
+  tone = "background",
+}: {
+  className?: string
+  /* Which surface this divider sits on. The artwork is painted on paper, so
+     the asset has a solid surface colour baked in rather than transparency —
+     pass "card" inside a bg-card section or the paper shows as a darker
+     rectangle against the lighter card. */
+  tone?: "background" | "card"
+}) {
   return (
     <div className={`flex justify-center ${className}`} aria-hidden="true">
       <Image
-        src="/lotus-vine.webp"
+        src={tone === "card" ? "/lotus-vine-card.webp" : "/lotus-vine.webp"}
         alt=""
         width={1024}
         height={190}

@@ -243,7 +243,8 @@ export default function Page() {
             <Reveal className="text-center">
               <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Order of events</p>
               <h2 className="mt-3 font-serif text-4xl text-primary sm:text-5xl">Schedule of the Day</h2>
-              <LotusRowDivider className="my-8" />
+              {/* the one divider on a card surface — see the tone prop */}
+              <LotusRowDivider className="my-8" tone="card" />
             </Reveal>
 
             <ol className="relative space-y-8 border-l border-border pl-8">

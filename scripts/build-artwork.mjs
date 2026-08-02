@@ -28,8 +28,13 @@
  */
 import sharp from 'sharp'
 
-/** --background from app/globals.css, as sRGB. */
-const BG = [0xf5, 0xec, 0xd8]
+/** Surface colours from app/globals.css, as sRGB. Each asset bakes in the
+ *  colour of the surface it will sit on — a divider dropped on --card with
+ *  --background baked in shows up as a darker rectangle, and vice versa. */
+const SURFACE = {
+  background: [0xf5, 0xec, 0xd8],
+  card: [0xfa, 0xf4, 0xe6],
+}
 
 /** Blur radius approximating the paper's lighting field. See note above. */
 const SIGMA = 90
@@ -38,6 +43,7 @@ const ASSETS = [
   {
     source: 'assets/pr-logo-source.png',
     out: 'public/pr-monogram.webp',
+    surface: 'background',
     // Excludes the painted names — the site sets those as live text, so baking
     // them in would show the names twice in two different typefaces.
     //
@@ -51,13 +57,23 @@ const ASSETS = [
   {
     source: 'assets/lotus-vine-source.png',
     out: 'public/lotus-vine.webp',
+    surface: 'background',
     // The vine runs edge to edge, so the crop keeps the full width and trims
     // only the empty paper above and below the band.
     crop: { left: 0, top: 145, width: 1024, height: 190 },
   },
+  {
+    // Same vine, baked for --card. The Schedule section is the one place a
+    // divider sits on a card surface.
+    source: 'assets/lotus-vine-source.png',
+    out: 'public/lotus-vine-card.webp',
+    surface: 'card',
+    crop: { left: 0, top: 145, width: 1024, height: 190 },
+  },
 ]
 
-for (const { source, out, crop } of ASSETS) {
+for (const { source, out, crop, surface } of ASSETS) {
+  const BG = SURFACE[surface]
   const base = sharp(source).extract(crop).removeAlpha()
   const { data, info } = await base.clone().raw().toBuffer({ resolveWithObject: true })
   const { data: field } = await base.clone().blur(SIGMA).raw().toBuffer({ resolveWithObject: true })
