@@ -136,6 +136,11 @@ function buildSummary() {
   if (s) s.clear()
   else s = ss.insertSheet(name, 0)
 
+  // If any cell carries the "Plain text" (@) number format, a formula written
+  // into it is stored as literal text and displays as "=COUNTA(...)" instead of
+  // a number. Reset the working area to General first so that cannot happen.
+  s.getRange(1, 1, 220, 10).setNumberFormat('General')
+
   const R = SHEET_NAME // the RSVPs tab
 
   s.getRange('A1').setValue('RSVP summary').setFontSize(16).setFontWeight('bold')
