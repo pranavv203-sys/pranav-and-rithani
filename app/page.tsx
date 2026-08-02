@@ -134,7 +134,7 @@ export default function Page() {
                 stretched out around them, everything simply, unmistakably clicked&mdash;the moment they both look
                 back on and call the beginning of forever.
               </p>
-              <p className="font-serif text-xl italic text-primary text-pretty">
+              <p className="font-serif text-xl italic text-accent text-pretty">
                 Somewhere along that ridiculous, roundabout journey, they fell in love&mdash;and now they&apos;re
                 getting married. They&apos;re as surprised as you are.
               </p>
@@ -158,16 +158,16 @@ export default function Page() {
         </section>
 
         {/* Details */}
-        <section className="relative bg-card px-6 py-24">
+        <section className="relative bg-background px-6 py-24">
           <div className="mx-auto max-w-5xl text-center">
             <Reveal>
               <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">The celebration</p>
-              <h2 className="name-gradient mt-3 font-serif text-4xl sm:text-5xl">When &amp; Where</h2>
+              <h2 className="mt-3 font-serif text-4xl text-primary sm:text-5xl">When &amp; Where</h2>
               <LotusRowDivider className="my-8" />
             </Reveal>
 
             <div className="grid gap-6 text-left sm:grid-cols-2">
-              <Reveal className="rounded-xl border border-border bg-background p-8 shadow-sm">
+              <Reveal className="rounded-xl border border-border bg-card p-8 shadow-sm">
                 <CalendarDays className="h-7 w-7 text-primary" aria-hidden="true" />
                 <h3 className="mt-4 font-serif text-2xl text-foreground">The Date</h3>
                 <p className="mt-2 leading-relaxed text-muted-foreground">Thursday, September 17, 2026</p>
@@ -176,7 +176,7 @@ export default function Page() {
                 </p>
               </Reveal>
 
-              <Reveal delay={140} className="rounded-xl border border-border bg-background p-8 shadow-sm">
+              <Reveal delay={140} className="rounded-xl border border-border bg-card p-8 shadow-sm">
                 <MapPin className="h-7 w-7 text-primary" aria-hidden="true" />
                 <h3 className="mt-4 font-serif text-2xl text-foreground">The Venue</h3>
                 <p className="mt-2 leading-relaxed text-muted-foreground">
@@ -215,11 +215,11 @@ export default function Page() {
         </section>
 
         {/* Schedule */}
-        <section className="relative px-6 py-24">
+        <section className="relative border-y border-border bg-card px-6 py-24">
           <div className="mx-auto max-w-3xl">
             <Reveal className="text-center">
               <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Order of events</p>
-              <h2 className="name-gradient mt-3 font-serif text-4xl sm:text-5xl">Schedule of the Day</h2>
+              <h2 className="mt-3 font-serif text-4xl text-primary sm:text-5xl">Schedule of the Day</h2>
               <LotusRowDivider className="my-8" />
             </Reveal>
 
@@ -228,7 +228,7 @@ export default function Page() {
                 const Icon = item.icon
                 return (
                   <Reveal as="li" key={item.title} delay={index * 120} className="relative">
-                    <span className="absolute -left-[42px] flex h-7 w-7 items-center justify-center rounded-full border border-border bg-card">
+                    <span className="absolute -left-[42px] flex h-7 w-7 items-center justify-center rounded-full border border-border bg-background">
                       <Icon className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
                     </span>
                     <p className="text-sm font-medium uppercase tracking-[0.15em] text-primary">{item.time}</p>
@@ -245,7 +245,7 @@ export default function Page() {
         <section id="rsvp" className="relative scroll-mt-8 bg-background px-6 py-24">
           <Reveal className="mx-auto max-w-xl text-center">
             <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Kindly respond</p>
-            <h2 className="name-gradient mt-3 font-serif text-4xl sm:text-5xl">RSVP</h2>
+            <h2 className="mt-3 font-serif text-4xl text-primary sm:text-5xl">RSVP</h2>
             <p className="mt-4 leading-relaxed text-muted-foreground">
               We would be delighted to celebrate with you.
             </p>

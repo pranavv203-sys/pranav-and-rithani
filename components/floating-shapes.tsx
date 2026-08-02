@@ -12,12 +12,14 @@ import { useEffect, useRef } from "react"
 
 type Metal = { light: string; dark: string }
 
-// Warm metallics + silver. Each has a light and dark stop for a shiny sheen.
+// Warm metallics only. Each has a light and dark stop for a shiny sheen.
+// (Cool silver read as grey against the beige ground, so the two silver
+// entries became champagne and pearl — same light-catching range, warm.)
 const METALS: Metal[] = [
   { light: "#e6c86b", dark: "#b5891f" }, // gold
   { light: "#f0d98a", dark: "#c9a227" }, // bright gold
-  { light: "#e9e9ee", dark: "#a9afb8" }, // silver
-  { light: "#f4f5f7", dark: "#c2c7cf" }, // bright silver
+  { light: "#efe7d6", dark: "#b8a888" }, // champagne
+  { light: "#f7f1e3", dark: "#cbbda1" }, // pearl
   { light: "#d8c39a", dark: "#a8864a" }, // tan
   { light: "#9a8654", dark: "#5f4d24" }, // olive/espresso
   { light: "#d9a7b0", dark: "#b47a8a" }, // dusty rose

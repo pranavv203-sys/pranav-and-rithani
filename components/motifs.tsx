@@ -184,7 +184,9 @@ export function LotusRowDivider({ className = "" }: { className?: string }) {
       <span className="h-px w-12 bg-border sm:w-16" />
       <svg width="180" height="40" viewBox="0 0 180 40" className="text-primary">
         <g transform="translate(45 27)">{lotus(1.4, 0.6)}</g>
-        <g transform="translate(90 25)">{lotus(1.9, 0.95)}</g>
+        {/* centre lotus carries the terracotta accent — the one recurring
+            place the third palette colour shows up across the page */}
+        <g transform="translate(90 25)" className="text-accent">{lotus(1.9, 0.95)}</g>
         <g transform="translate(135 27)">{lotus(1.4, 0.6)}</g>
       </svg>
       <span className="h-px w-12 bg-border sm:w-16" />
