@@ -3,7 +3,7 @@
 Next.js 16 + React 19 + Tailwind v4, exported as a static site to GitHub Pages.
 RSVPs go to a Google Sheet.
 
-**Live:** https://pranavv203-sys.github.io/pranav-and-rithani/
+**Live:** https://pranavrithani.com
 
 ## Local development
 
@@ -38,9 +38,10 @@ variable change does not trigger a build on its own.
 
 ### Base paths
 
-Pages serves a project repo from `/<repo>/`. The workflow derives that prefix
-from the repo name and passes it as `NEXT_PUBLIC_BASE_PATH`, so renaming the
-repo cannot silently break every asset URL.
+The site is served from the root of a custom domain, so the base path is empty.
+The workflow treats the presence of `public/CNAME` as "custom domain" and sets
+it so; without that file it falls back to `/<repo>/`, which is how Pages serves
+a project repo. Removing the CNAME file would therefore change every asset URL.
 
 **Any path into `public/` must go through `asset()` in `lib/base-path.ts`.**
 `next/image` does not apply `basePath` when `images.unoptimized` is set — its
@@ -119,7 +120,6 @@ open a connection per cold start and an unpooled string hits the cap.
   `ui/button.tsx` are unused.
 - No rate limiting or duplicate protection on the RSVP endpoint. A double-tap
   is prevented by disabling the button while submitting, nothing more.
-- No Open Graph image, so the link renders as bare text when shared.
 
 ## Share preview
 
