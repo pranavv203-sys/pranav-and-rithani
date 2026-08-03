@@ -31,13 +31,18 @@ jobs:
       - run: npm ci
 
       # A project repo is served from https://<owner>.github.io/<repo>/, so the
-      # app needs that prefix. A repo literally named <owner>.github.io is served
-      # from the domain root and must have no prefix. Detect rather than hardcode,
-      # so renaming the repo cannot silently break every asset URL.
+      # app needs that prefix. Two cases are served from a domain root instead
+      # and must have NO prefix: a custom domain (public/CNAME present), and a
+      # repo literally named <owner>.github.io. Getting this wrong does not fail
+      # the build — it produces a page whose every asset 404s — so it is derived
+      # here rather than hardcoded anywhere.
       - name: Work out the base path
         id: base
         run: |
-          if [ "${{ github.event.repository.name }}" = "${{ github.repository_owner }}.github.io" ]; then
+          if [ -f public/CNAME ]; then
+            echo "custom domain: $(cat public/CNAME) — serving from root"
+            echo "path=" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event.repository.name }}" = "${{ github.repository_owner }}.github.io" ]; then
             echo "path=" >> "$GITHUB_OUTPUT"
           else
             echo "path=/${{ github.event.repository.name }}" >> "$GITHUB_OUTPUT"
