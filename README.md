@@ -120,3 +120,16 @@ open a connection per cold start and an unpooled string hits the cap.
 - No rate limiting or duplicate protection on the RSVP endpoint. A double-tap
   is prevented by disabling the button while submitting, nothing more.
 - No Open Graph image, so the link renders as bare text when shared.
+
+## Share preview
+
+`public/og.png` is the card messaging apps show when the link is pasted. It is
+1200×630 (the ratio every platform expects) and PNG rather than WebP, which
+several still handle unreliably.
+
+It was rendered from an HTML layout at exactly 1200×630 using the site's own
+Cormorant and Jost fonts, then cropped — not generated at build time, because a
+static export cannot run Next's image generation.
+
+**Changing the date, venue or names means re-rendering it.** The image is a
+flat picture; nothing regenerates it automatically.
